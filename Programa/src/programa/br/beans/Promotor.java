@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Promotor {
  private String nome;
  private String carro;
- //private String destino;
+ private String destino;
  private ArrayList<Pano> panos;
 
  
@@ -27,6 +27,12 @@ public ArrayList<Pano> getPanos() {
 }
 public void setPanos(ArrayList<Pano> panos) {
 	this.panos = panos;
+}
+public String getDestino() {
+	return destino;
+}
+public void setDestino(String destino) {
+	this.destino = destino;
 }
  
  

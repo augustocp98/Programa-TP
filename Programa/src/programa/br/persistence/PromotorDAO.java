@@ -17,6 +17,8 @@ public class PromotorDAO {
 
 	public void inserir(Promotor p){
 		promotores.add(p);
+	   
+		escreverArquivo();
 	}
 
 	public void escreverArquivo(){
@@ -59,8 +61,8 @@ public class PromotorDAO {
 	  String linha;
 	  while((linha = br.readLine()) != null){
 		String[] dados = linha.split(";");   
-		//Promotor p = new Promotor(??????)
-		//promotores.add(p);
+		Promotor p = new Promotor();
+		promotores.add(p);
 		
 	  }
 	  
@@ -75,12 +77,8 @@ public class PromotorDAO {
 			e.printStackTrace();
 		}
 	 }
-	 
-	 
-	 
-	 
+	  
 	 
  }
-
 
 }

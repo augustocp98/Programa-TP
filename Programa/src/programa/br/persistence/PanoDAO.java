@@ -19,11 +19,13 @@ public class PanoDAO {
 
 	public void inserirPano(Pano p){
 		panos.add(p);
+		escreverArquivo();
 	}
 
 	public void excluirPano(int cod){
 		Pano p = procurarPorCodigo(cod);
 		panos.remove(p);
+		escreverArquivo();
 	}
 
 	public Pano procurarPorCodigo(int cod){
@@ -35,6 +37,7 @@ public class PanoDAO {
 
 		return null;
 	}
+	
 	public ArrayList<Pano> listarEmprestados(){
 		ArrayList<Pano> temp = new ArrayList();
 		for (Pano pano : temp) {
@@ -43,7 +46,18 @@ public class PanoDAO {
 		}
 		return temp;
 	}
+	
+	public void alterarPano(Pano p){
+		Pano panotemp = procurarPorCodigo(p.getCodigoPano());
 
+		panotemp.setCliente(p.getCliente());
+		panotemp.setCodigoPano(p.getCodigoPano());
+		panotemp.setDataMontagem(p.getDataMontagem());
+		panotemp.setEmprestado(p.isEmprestado());
+
+		escreverArquivo();
+	}
+	
 	public void escreverArquivo(){
 		File f = new File(NOME_ARQUIVO);
 		FileWriter fw = null;
@@ -52,12 +66,12 @@ public class PanoDAO {
 		try {
 			fw = new FileWriter(f);
 			bw = new BufferedWriter(fw);
-		  for (Pano pano : panos) {
-			Cliente c = pano.getCliente();
-			String cpfCliente = c.getCpf();
-			  bw.write(pano.getCodigoPano()+";"+pano.getDataMontagem()+";"+pano.isEmprestado()+";"+cpfCliente);
-		}
-		
+			for (Pano pano : panos) {
+				Cliente c = pano.getCliente();
+				String cpfCliente = c.getCpf();
+				bw.write(pano.getCodigoPano()+";"+pano.getDataMontagem()+";"+pano.isEmprestado()+";"+cpfCliente);
+			}
+
 		} catch (IOException e) {
 
 			e.printStackTrace();
@@ -73,41 +87,38 @@ public class PanoDAO {
 	}
 
 
-static{
-	File f = new File(NOME_ARQUIVO);
-	FileReader fr = null;
-	BufferedReader br = null;
+	static{
+		File f = new File(NOME_ARQUIVO);
+		FileReader fr = null;
+		BufferedReader br = null;
 
-	try {
-		fr = new FileReader(f);
-		br = new BufferedReader(fr);
-
-		String linha;
-		while( (linha = br.readLine()) != null ) {
-			String[] dados = linha.split(";");
-			Cliente c =  ClienteDAO.buscarPorCpf(dados[3]);
-			Pano p = new Pano(Integer.parseInt(dados[0]),dados[1],Boolean.parseBoolean(dados[2]),c);
-			panos.add(p);
-		}
-	} catch (FileNotFoundException e) {
-
-		e.printStackTrace();
-	} catch (IOException e) {
-
-		e.printStackTrace();
-	}
-	finally{
 		try {
-			fr.close();
-			br.close();
+			fr = new FileReader(f);
+			br = new BufferedReader(fr);
 
-		}catch(IOException e){
+			String linha;
+			while( (linha = br.readLine()) != null ) {
+				String[] dados = linha.split(";");
+				Cliente c =  ClienteDAO.buscarPorCpf(dados[3]);
+				Pano p = new Pano(Integer.parseInt(dados[0]),dados[1],Boolean.parseBoolean(dados[2]),c);
+				panos.add(p);
+			}
+		} catch (FileNotFoundException e) {
+
+			e.printStackTrace();
+		} catch (IOException e) {
+
 			e.printStackTrace();
 		}
+		finally{
+			try {
+				fr.close();
+				br.close();
 
-
+			}catch(IOException e){
+				e.printStackTrace();
+			}
+		}
 	}
-
-}
 }
 

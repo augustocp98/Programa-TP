@@ -18,13 +18,32 @@ public class EmprestimoDAO {
 	static ArrayList<Emprestimo> emprestimos = new ArrayList();
 
 	public void emprestar(int cod,String cpf){
+		
 		ClienteDAO cdao = new ClienteDAO();
 		PanoDAO pdao = new PanoDAO();
+		
 		Cliente c = cdao.buscarPorCpf(cpf); 	
 		Pano p = pdao.procurarPorCodigo(cod);	
+
 		p.setCliente(c);
 		p.setEmprestado(true);
+		
+		escreverArquivo();
 	}
+
+	public void receber(int cod){
+		PanoDAO pdao = new PanoDAO();
+		ClienteDAO cdao = new ClienteDAO();
+
+		Pano p = pdao.procurarPorCodigo(cod);
+		Cliente c = p.getCliente();
+
+		p.setCliente(null);
+		p.setEmprestado(false);
+		
+		escreverArquivo();            
+	}
+
 	public void escreverArquivo(){
 		File f = new File(NOME_ARQUIVO);
 		FileWriter fw = null;
@@ -49,7 +68,6 @@ public class EmprestimoDAO {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	static{
@@ -82,10 +100,7 @@ public class EmprestimoDAO {
 			}catch(IOException e){
 				e.printStackTrace();
 			}
-
-
 		}
-
 	}
 }
 
